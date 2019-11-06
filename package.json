@@ -1,0 +1,22 @@
+{
+  "name": "micro-accounts",
+  "version": "0.1.0",
+  "description": "Microservice accounts managment application",
+  "main": "src/index.ts",
+  "repository": "https://github.com/PsykeSPB/micro-accounts",
+  "author": "PsykeSPB@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "ts-node": "^8.4.1",
+    "typescript": "^3.7.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.22",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0"
+  },
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "test": "jest"
+  }
+}
