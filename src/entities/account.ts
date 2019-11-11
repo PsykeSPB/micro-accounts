@@ -1,58 +1,52 @@
-export class AccountFactory {
-  readonly generateID: () => string;
+export default class Account {
+  protected _id: string;
+  protected _name: string;
+  protected _description: string;
+  protected _ancestor: Account;
 
-  constructor(generateID: () => string) {
-    this.generateID = generateID;
+  public constructor(id: string, name: string, description: string) {
+    this._id = id;
+    this._name = name;
+    this._description = description;
   }
 
-  public create({ ...args }) {
-    let { id, name, description, ancestor, descendants } = args;
-
-    if (!id) {
-      id = this.generateID();
-    }
-
-    if (ancestor) {
-      if (!(ancestor instanceof Account))
-        throw new Error("Account 'ancestor' must be an instance of Account");
-    } else {
-      ancestor = undefined;
-    }
-
-    if (descendants) {
-      if (!(descendants instanceof Array))
-        throw new Error("Account 'descendants' must be an Array");
-
-      if (!descendants.every(descendant => descendant instanceof Account))
-        throw new Error(
-          "Every Account 'descendant' must be an instance of Account"
-        );
-    } else {
-      descendants = [];
-    }
-
-    return new Account(id, name, description, ancestor, descendants);
+  get id(): string {
+    return this._id;
   }
-}
 
-export class Account {
-  readonly id: string;
-  readonly name: string;
-  readonly description: string;
-  readonly ancestor: Account;
-  readonly descendants: Array<Account>;
+  get name(): string {
+    return this._name;
+  }
 
-  public constructor(
-    id: string,
-    name: string,
-    description: string,
-    ancestor: Account,
-    descendants: Array<Account>
-  ) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.ancestor = ancestor;
-    this.descendants = descendants;
+  get description(): string {
+    return this._description;
+  }
+
+  get ancestor(): Account {
+    return this._ancestor;
+  }
+
+  /**
+   * Returns ancestral branch of Accounts from current to top one.
+   *
+   * @returns Flat array of all ancestral Accounts.
+   */
+  get allAncestors(): Array<Account> {
+    return this.ancestor ? [...this.ancestor.allAncestors, this] : [this];
+  }
+
+  /**
+   * Sets curent Account's ancestor if it's possible.
+   *
+   * @param target Account to be set as an ancestor to current one.
+   * @throws Error if target has current Account as ancestor, even recursevly.
+   */
+  public setAncestor(target: Account): void {
+    const targetBrachIds = target.allAncestors.map(account => account.id);
+    if (targetBrachIds.includes(this.id)) {
+      throw new Error("Circular inheritance forbiden in account");
+    } else {
+      this._ancestor = target;
+    }
   }
 }

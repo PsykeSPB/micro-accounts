@@ -1,3 +1,3 @@
-import { AccountFactory as AccountFactoryClass } from "./account";
+import AccountFactoryClass from "./accountFactory";
 
 export const AccountFactory = new AccountFactoryClass(() => "test");
